@@ -1,4 +1,5 @@
-libdir = File.dirname(__FILE__)
-$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
-require 'esnek/base'
+require 'rest_client'
+require 'json'
+require 'ostruct'
 
+require 'esnek/base'
