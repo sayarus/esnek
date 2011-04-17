@@ -17,5 +17,5 @@ For the installation of elasticsearch please follow the guides at http://www.ela
 
 == Notes
 
-Esnek was developed and tested using Redcar under Ubuntu Linux
+Esnek was initially developed using Redcar under Ubuntu Linux 10.10.
 
