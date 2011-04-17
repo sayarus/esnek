@@ -4,10 +4,10 @@ require 'rake/clean'
 require 'rake/gempackagetask'
 require 'rake/rdoctask'
 require 'rake/testtask'
-require './lib/devrinim/version'
+require './lib/esnek/version'
 
 
-spec = eval(File.read('sinatra.gemspec'))
+spec = eval(File.read('esnek.gemspec'))
     
 Rake::GemPackageTask.new(spec) do |p|
   p.gem_spec = spec
@@ -16,12 +16,12 @@ Rake::GemPackageTask.new(spec) do |p|
 end
 
 Rake::RDocTask.new do |rdoc|
-  files =['README', 'LICENSE','CHANGES', 'AUTHORS', 'lib/**/*.rb']
+  files =['README.rdoc', 'LICENSE','CHANGES', 'AUTHORS', 'lib/**/*.rb', 'test/**/*.rb']
   rdoc.rdoc_files.add(files)
-  rdoc.main = "README" # page to start on
-  rdoc.title = "Devrinim Documentation"
-  rdoc.rdoc_dir = 'doc/rdoc' # rdoc output folder
-  rdoc.options << '--line-numbers'
+  rdoc.main = "README"
+  rdoc.title = "Esnek Documentation"
+  rdoc.rdoc_dir = 'doc/rdoc'
+  rdoc.options
 end
 
 Rake::TestTask.new do |t|
