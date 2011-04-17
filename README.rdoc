@@ -1,13 +1,14 @@
 = Esnek
-=========
 
-_Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_(http://www.elasticsearch.org/); a scalable, fast, distributed, 
-highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on [Lucene](http://lucene.apache.org/). 
+_Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed, 
+highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 
 == Installation:
 
   gem install esnek
 
+For the installation of elasticsearch please follow the guides at http://www.elasticsearch.org
+  
 == Usage:
 
   require 'esnek'  
