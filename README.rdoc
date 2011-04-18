@@ -1,4 +1,5 @@
 = Esnek
+_UNDER HEAVY DEVELOPMENT IN APRIL 2011_
 
 _Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed, 
 highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
@@ -12,7 +13,7 @@ For the installation of elasticsearch please follow the guides at http://www.ela
 == Usage:
 
   require 'esnek'  
-  es = ElasticSearch.new('127.0.0.1:9200', :index => "twitter", :type => "tweet")
+  es = ElasticSearch.new('http://localhost:9200')
   es._cluster.state
 
 == Notes
