@@ -11,12 +11,12 @@ class Esnek
 
   def method_missing(method_sym, *args, &block)
     if [:get, :put, :post, :delete].include?(method_sym)
-      url = @url_root + @chain.map{|e| e[:met]}.join('/')      
-      params = @chain.inject({}){|s,e| s.merge!(e[:params]) if e[:params].is_a?(Hash)}
+      url = @url_root.gsub(/\/$/,'') + '/' + @chain.map{|e| e[:method]}.join('/')
+      params = @chain.inject({}){|s,e| s.merge!(e[:arg][:params] || {}) if e[:arg].is_a?(Hash)}
       @chain = []
-      OpenStruct.new JSON.parse RestClient.send(method_sym, url, {:params => {:q => 'search'}})
+      OpenStruct.new JSON.parse RestClient.send(method_sym, url, {:params => params})
     else      
-      @chain << {:met => method_sym, :params => args}
+      @chain << {:method => method_sym, :arg => args[0] || {} }
       self
     end
   end

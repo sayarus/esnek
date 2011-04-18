@@ -13,8 +13,8 @@ For the installation of elasticsearch please follow the guides at http://www.ela
 == Usage:
 
   require 'esnek'  
-  es = ElasticSearch.new('http://localhost:9200')
-  es._cluster.state
+  es = Esnek.new('http://localhost:9200')
+  es._cluster.state.get
 
 == Notes
 
