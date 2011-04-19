@@ -8,7 +8,6 @@ class Esnek
   attr_accessor :chain, :url_root
   def initialize(url_root)
     @url_root = url_root
-    @debug = debug
     @chain = []
   end
 

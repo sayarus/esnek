@@ -42,10 +42,12 @@ In order to post a JSON data simply pass a block (do...end)
   end
 
 ===  Google Translate API
+  require 'esnek'  
   gapi = Esnek.new('https://www.googleapis.com')
   gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
 
 ===  Google URL Shortener
+  require 'esnek'  
   gapi = Esnek.new('https://www.googleapis.com')
   res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
   puts res.longURL # Use res.table[:id] instead of res.id, because id method already exist for Object
