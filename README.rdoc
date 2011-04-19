@@ -50,7 +50,7 @@ In order to post a JSON data simply pass a block (do...end)
   require 'esnek'  
   gapi = Esnek.new('https://www.googleapis.com')
   res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
-  puts res.longURL # Use res.table[:id] instead of res.id, because id method already exist for Object
+  puts res.longUrl # Use res.table[:id] instead of res.id, because id method already exist for Object
 
 == Proxy
 
