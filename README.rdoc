@@ -58,6 +58,15 @@ Esnek will use the proxy specified by RestClient.proxy:
 or the proxy url is set in an environment variable   
   RestClient.proxy = ENV['http_proxy']
 
+== Logging
+
+To enable logging you can
+
+* set RestClient.log with a ruby Logger
+* or set an environment variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
+
+   $ RESTCLIENT_LOG=stdout path/to/my/program
+   $ RESTCLIENT_LOG=stdout irb
 
 
 == Notes
