@@ -10,7 +10,7 @@ highly-available, real time search RESTful search engine communicating by JSON o
 
 For the installation of elasticsearch please follow the guides at http://www.elasticsearch.org
   
-== Usage:
+== Usage with ElasticSearch
 
   require 'esnek'  
   es = Esnek.new('http://localhost:9200',true)
@@ -28,6 +28,15 @@ For the installation of elasticsearch please follow the guides at http://www.ela
   es.twitter.tweet.__2.put do
     {"user" => "alper", "post_date" => "2011-11-15T14:12:12", "message" => "For esnek"}
   end
+
+===  Google Translate API
+  gapi = Esnek.new('https://www.googleapis.com',true)
+  gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
+
+===  Google URL Shortener
+  gapi = Esnek.new('https://www.googleapis.com',true)
+  res = gapi.urlshortener.v1.url.put {{"longUrl": "http://www.sayarus.com/"}}
+  puts res.id
   
 == Notes
 

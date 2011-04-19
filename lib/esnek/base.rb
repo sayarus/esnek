@@ -27,7 +27,7 @@ class Esnek
       end
       @chain = []
       
-      resp = block_given? ? RestClient.send(method_sym, url, data, :params => params) :
+      resp = block_given? ? RestClient.send(method_sym, url, data,:params => params,:content_type => :json, :accept => :json) :
             RestClient.send(method_sym, url,:params => params)
             
       if resp.headers[:content_type].include?('application/json')

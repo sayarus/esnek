@@ -1,9 +1,17 @@
 = Esnek Change Log
 
 == Expected
-* Authentication mechanisms
 
-== 0.0.1
+== 0.2.x
+* tests with elasticsearch API
+* Authentication mechanisms
+* proxy
+
+== 0.1.x
+* first working version
+* documentation
+
+== 0.0.x
 * the very initial release
 
 
