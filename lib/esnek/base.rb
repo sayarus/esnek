@@ -6,7 +6,7 @@ require 'ostruct'
 # highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 class Esnek
   attr_accessor :chain, :url_root
-  def initialize(url_root, debug=false)
+  def initialize(url_root)
     @url_root = url_root
     @debug = debug
     @chain = []
@@ -20,18 +20,19 @@ class Esnek
       if block_given?
         data = block.call.to_json rescue nil
       end
-      if @debug
-        puts url
-        puts data.inspect 
-        puts @chain.inspect 
-      end
       @chain = []
       
       resp = block_given? ? RestClient.send(method_sym, url, data,:params => params,:content_type => :json, :accept => :json) :
             RestClient.send(method_sym, url,:params => params)
             
       if resp.headers[:content_type].include?('application/json')
-        OpenStruct.new JSON.parse resp
+        r = OpenStruct.new JSON.parse resp
+        class << r
+          def table
+            @table
+          end
+        end
+        r
       else
         resp
       end
