@@ -1,8 +1,11 @@
 = Esnek
 _UNDER HEAVY DEVELOPMENT IN APRIL 2011_
 
-_Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed, 
-highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
+_Esnek_ provides a quick Ruby interface for JSON  APIs, such as ElasticSearch, Google APIs, Facebook Graph API.. 
+
+Esnek is mainly developed for _ElasticSearch_ in mind.  ElasticSearch (http://www.elasticsearch.org) 
+is a scalable, fast, distributed, highly-available, real time search RESTful search engine communicating 
+by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 
 == Installation:
 
@@ -18,8 +21,7 @@ To use esnek just instantiate Esnek with the base API URL.
   require 'esnek'  
   es = Esnek.new('http://localhost:9200')
 
-Make a chained method call where each method is a directory in the URL for the JSON API.Your method chain must end with get, post, put or delete.
-For example assuming elastic search is running at port 9200 on your localhost, the following code gets the state of the cluster.
+For example assuming elastic search is running at port 9200 on your localhost, the following code gets the state of the cluster for Elastic Search
 
   #curl -XGET 'http://localhost:9200/_cluster/state'
   es._cluster.state.get
@@ -60,15 +62,17 @@ Notice that since http://www.wsirussia.ru is an invalid ruby method name, we use
   puts res.shares
 
 == Advanced
+With esnek just make a chained method call where each method is a directory in the URL 
+for your specific JSON API and end append a final method for HTTP verb; get, post, put or delete.
 
-Esnek is based on restclient and some of the settings from Restclient apply to esnek to.
 === General Usage 
   require 'esnek'  
 Choose any JSON over HTTP API and identify the base url such as https://www.googleapis.com
 
   gapi = Esnek.new('https://www.googleapis.com')
   
-Form a chained method call where each directory in the URL becomes a method
+Form a chained method call where each directory in the URL becomes a method and dont forget that 
+your method chain must end with get, post, put or delete.
 
   gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
   
@@ -84,9 +88,19 @@ Alternatively you may prefix digits with double underscore __
 
   es.twitter.tweet.__1.get
 
+=== Return Values
+Esnek simply converts the returned JSON into an Ostruct ruby object.
+  
+  res.my_field
+  res.table[:my_field]  # alternative form for field names such as .id which already exist in the base object
+
+Notice that Ostruct converts only the first level hash keys into object attributes. 
+The deeper hashes are intact and should be accessed as Hash.
+
+Consult your specific API documentation on how the return value is structured
 
 === Proxy
-
+Esnek is based on restclient and some of the settings from Restclient apply to esnek to.
 Esnek will use the proxy specified by RestClient.proxy:
 
   RestClient.proxy = "http://proxy.example.com/"
@@ -95,7 +109,7 @@ or the proxy url is set in an environment variable
 
 === Logging
 
-To enable logging you can
+To enable logging the calls made to the API, you may
 
 * set RestClient.log with a ruby Logger
 * or set an environment variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
