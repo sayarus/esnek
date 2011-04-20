@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = ESNEK_VERSION
   #s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc', 'LICENSE','CHANGES','AUTHORS']
-  s.summary = 'Esnek provides a quick Ruby interface for JSON  APIs, such as ElasticSearch'
+  s.summary = 'Esnek provides a minimalistic Ruby interface for JSON  APIs, such as ElasticSearch'
   s.description = s.summary
   s.author = 'Alper Akgun'
   s.email = 'esnek@sayarus.com'
