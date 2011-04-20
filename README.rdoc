@@ -10,7 +10,7 @@ highly-available, real time search RESTful search engine communicating by JSON o
 
 For the installation of elasticsearch please follow the guides at http://www.elasticsearch.org
   
-== Usage 
+== Quick Start
 
 === ElasticSearch
 
@@ -56,9 +56,27 @@ In order to post a JSON data simply pass a block (do...end)
   require 'esnek'  
   fb = Esnek.new('http://graph.facebook.com')
   res = fb.send(:"http://www.wsirussia.ru").get
+Notice that since http://www.wsirussia.ru is an invalid ruby method name, we use send to call it
   puts res.shares
 
-== Proxy
+== Advanced
+
+Esnek is based on restclient and some of the settings from Restclient apply to esnek to.
+=== Usage
+  require 'esnek'  
+* Choose any JSON over HTTP API and identify the base url such as https://www.googleapis.com
+  gapi = Esnek.new('https://www.googleapis.com')
+* Form a chained method call where each directory in the URL becomes a method
+  gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
+* Any query string should be given as a hash to any method in the method call, the following is valid too.
+  gapi.language.translate.v2(:key => INSERT_YOUR_KEY).get(:q => "hello world", :source => :en, :target => :tr)
+* If you face any portion of the URL which cannot be a valid Ruby method name use send(:'!1invalid_method')
+  res = fb.send(:"http://www.wsirussia.ru").get
+* Alternatively you may prefix digits with double underscore __
+  es.twitter.tweet.__1.get
+
+
+=== Proxy
 
 Esnek will use the proxy specified by RestClient.proxy:
 
@@ -66,7 +84,7 @@ Esnek will use the proxy specified by RestClient.proxy:
 or the proxy url is set in an environment variable   
   RestClient.proxy = ENV['http_proxy']
 
-== Logging
+=== Logging
 
 To enable logging you can
 
