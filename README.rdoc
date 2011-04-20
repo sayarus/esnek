@@ -52,6 +52,12 @@ In order to post a JSON data simply pass a block (do...end)
   res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
   puts res.longUrl # Use res.table[:id] instead of res.id, because id method already exist for Object
 
+===  Facebook Graph API
+  require 'esnek'  
+  fb = Esnek.new('http://graph.facebook.com')
+  res = fb.send(:"http://www.wsirussia.ru").get
+  puts res.shares
+
 == Proxy
 
 Esnek will use the proxy specified by RestClient.proxy:

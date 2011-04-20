@@ -22,7 +22,7 @@ class Esnek
       @chain = []
       
       resp = block_given? ? RestClient.send(method_sym, url, data,:params => params,:content_type => :json, :accept => :json) :
-            RestClient.send(method_sym, url,:params => params)
+            RestClient.send(method_sym, url,:params => params,:content_type => :json, :accept => :json)
             
       if resp.headers[:content_type].include?('application/json')
         r = OpenStruct.new JSON.parse resp
