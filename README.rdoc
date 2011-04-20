@@ -65,14 +65,23 @@ Esnek is based on restclient and some of the settings from Restclient apply to e
 === Usage
   require 'esnek'  
 * Choose any JSON over HTTP API and identify the base url such as https://www.googleapis.com
+
   gapi = Esnek.new('https://www.googleapis.com')
+  
 * Form a chained method call where each directory in the URL becomes a method
+
   gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
+  
 * Any query string should be given as a hash to any method in the method call, the following is valid too.
+
   gapi.language.translate.v2(:key => INSERT_YOUR_KEY).get(:q => "hello world", :source => :en, :target => :tr)
+  
 * If you face any portion of the URL which cannot be a valid Ruby method name use send(:'!1invalid_method')
+
   res = fb.send(:"http://www.wsirussia.ru").get
+  
 * Alternatively you may prefix digits with double underscore __
+
   es.twitter.tweet.__1.get
 
 
