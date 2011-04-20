@@ -1,5 +1,4 @@
 = Esnek
-_UNDER HEAVY DEVELOPMENT IN APRIL 2011_
 
 _Esnek_ provides a quick Ruby interface for JSON  APIs, such as ElasticSearch, Google APIs, Facebook Graph API.. 
 
@@ -10,6 +9,8 @@ by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org).
 == Installation:
 
   gem install esnek
+
+Esnek is under heavy development in april 2011, so gem update frequently.
 
 For the installation of elasticsearch please follow the guides at http://www.elasticsearch.org
   
