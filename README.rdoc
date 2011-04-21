@@ -89,6 +89,12 @@ Alternatively you may prefix digits with double underscore __
 
   es.twitter.tweet.__1.get
 
+If you append a block and pass a hash, the hash is converted into a JSON and posted as data.
+
+  es.twitter.tweet.__2.put do
+    {"user" => "alper", "post_date" => "2011-11-15T14:12:12", "message" => "For esnek"}
+  end
+
 === Return Values
 Esnek simply converts the returned JSON into an Ostruct ruby object.
   
