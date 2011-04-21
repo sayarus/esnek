@@ -59,7 +59,7 @@ In order to post a JSON data simply pass a block (do...end)
   require 'esnek'  
   fb = Esnek.new('http://graph.facebook.com')
   res = fb.send(:"http://www.wsirussia.ru").get
-Notice that since http://www.wsirussia.ru is an invalid ruby method name, we use send to call it
+Notice that since "http://www.wsirussia.ru" is an invalid ruby method name, we use "send" to call it
   puts res.shares
 
 == Advanced
