@@ -11,6 +11,19 @@ class Esnek
     @chain = []
   end
 
+  def parse_json(resp)
+    j = JSON.parse resp
+    case
+    when j.is_a?(Hash)
+      r=OpenStruct.new(j)
+      class << r;def table;@table;end;end
+      r
+    when j.is_a?(Array)
+      j.map{|e| r=OpenStruct.new(e);class << r;def table;@table;end;end;r}
+    else
+      j
+    end
+  end
   def method_missing(method_sym, *args, &block)
     if [:get, :put, :post, :delete].include?(method_sym)
       @chain << {:method => nil, :arg => (args.empty? ? {} : args[0]) }
@@ -19,22 +32,11 @@ class Esnek
       if block_given?
         data = block.call.to_json rescue nil
       end
-      @chain = []
-      
+      @chain = []      
       resp = block_given? ? RestClient.send(method_sym, url, data,:params => params,:content_type => :json, :accept => :json) :
             RestClient.send(method_sym, url,:params => params,:content_type => :json, :accept => :json)
             
-      if resp.headers[:content_type].include?('application/json')
-        r = OpenStruct.new JSON.parse resp
-        class << r
-          def table
-            @table
-          end
-        end
-        r
-      else
-        resp
-      end
+      resp.headers[:content_type].include?('application/json') ? parse_json(resp) : resp
     else      
       @chain << {:method => method_sym.to_s.gsub(/^__/,''), :arg => (args.empty? ? {} : args[0]) }
       self

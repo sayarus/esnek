@@ -6,6 +6,7 @@
 * tests with elasticsearch API
 * Authentication mechanisms
 * proxy
+* Based on return value a hash or an array of OpenStruct is formed
 
 == 0.1.x
 * first working version
