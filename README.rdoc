@@ -1,42 +1,35 @@
 = Esnek
 
 _Esnek_ provides a minimalistic Ruby interface for JSON  APIs, such as ElasticSearch, Google APIs, Facebook Graph API.. 
-
-Esnek is mainly developed for _ElasticSearch_ in mind.  ElasticSearch (http://www.elasticsearch.org) 
-is a scalable, fast, distributed, highly-available, real time search RESTful search engine communicating 
-by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
+Esnek is initially developed for _ElasticSearch_ http://www.elasticsearch.org which is based on _Lucene_ http://lucene.apache.org .
 
 == Installation:
 
-  gem install esnek
+  gem install esnek # In april-june 2011, under development so use "gem update" frequently.
 
-Esnek is under heavy development in april 2011, so use "gem update" frequently.
-
-For the installation of elasticsearch please follow the guides at http://www.elasticsearch.org
-  
 == Quick Start
 
 === ElasticSearch
 
-To use esnek just instantiate Esnek with the base API URL.
+To install ElasticSearch please follow the guides at http://www.elasticsearch.org.
+To use esnek just instantiate Esnek with the base API URL. 
   require 'esnek'  
   es = Esnek.new('http://localhost:9200')
 
-For example assuming elastic search is running at port 9200 on your localhost, the following code gets the state of the cluster for Elastic Search
+Assuming Elastic Search is running at port 9200 on your localhost, the following code gets the state of the cluster:
 
   #curl -XGET 'http://localhost:9200/_cluster/state'
   es._cluster.state.get
 
-
-You may pass options as a hash parameter for each directory in your URL.
+You may pass options as a hash parameter for each directory in your URL:
   #curl -XGET http://localhost:9200/twitter/tweet/_search?q=user:kimchy
   es.twitter.tweet._search(:q => 'good').get
 
-For literals such as 1,  use __1; esnek simply omits __ (2 underscores)
+For literals such as 1,  use __1; esnek simply omits __ (2 underscores):
   #curl -XGET 'http://localhost:9200/twitter/tweet/1'
   es.twitter.tweet.__1.get
 
-In order to post a JSON data simply pass a block (do...end)
+In order to post a JSON data simply pass a block (do...end) which returns a hash:
   #curl -XPUT http://localhost:9200/twitter/tweet/2 -d '{
   # "user": "kimchy", "post_date": "2009-11-15T14:12:12", "message": "You know, for Search"
   # }'
@@ -63,25 +56,24 @@ Notice that since "http://www.wsirussia.ru" is an invalid ruby method name, we u
   puts res.shares
 
 == Advanced
-With esnek just make a chained method call where each method is a directory in the URL 
-for your specific JSON API and end append a final method for HTTP verb; get, post, put or delete.
+With Esnek you make a chained method call where each method is a directory in the URL 
+for your target JSON API. You finish by appending a method for the HTTP verb; get, post, put or delete.
 
 === General Usage 
-  require 'esnek'  
-Choose any JSON over HTTP API and identify the base url such as https://www.googleapis.com
+  require 'esnek'
+Choose any JSON over HTTP API and identify the base url:
 
   gapi = Esnek.new('https://www.googleapis.com')
   
-Form a chained method call where each directory in the URL becomes a method and dont forget that 
-your method chain must end with get, post, put or delete.
+Form a chained method call and make sure you end with get, post, put or delete.
 
   gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
   
-Any query string should be given as a hash to any method in the method call, the following is valid too.
+Any query string should be given as a hash parameter to any method in the method chain.
 
   gapi.language.translate.v2(:key => INSERT_YOUR_KEY).get(:q => "hello world", :source => :en, :target => :tr)
   
-If you face any portion of the URL which cannot be a valid Ruby method name use send(:'!1invalid_method')
+If you face any portion of the URL which cannot be a valid Ruby method name, use send(:'!1invalid_method')
 
   res = fb.send(:"http://www.wsirussia.ru").get
   
@@ -89,37 +81,31 @@ Alternatively you may prefix digits with double underscore __
 
   es.twitter.tweet.__1.get
 
-If you append a block and pass a hash, the hash is converted into a JSON and posted as data.
+If you append a block and the block returns a hash, the hash is converted into a JSON and posted as data.
 
   es.twitter.tweet.__2.put do
     {"user" => "alper", "post_date" => "2011-11-15T14:12:12", "message" => "For esnek"}
   end
 
 === Return Values
-Esnek simply converts the returned JSON into an Ostruct ruby object.
+Esnek converts the returned JSON into an Ostruct object.
   
-  res.my_field
-  res.table[:my_field]  # alternative form for field names such as .id which already exist in the base object
+  res.my_field # access as if it is an object's attrribute
+  res.table[:my_field]  # For field names such as "id", you may use the "table" attribute.
 
-Notice that Ostruct converts only the first level hash keys into object attributes. 
-The deeper hashes are intact and should be accessed as Hash.
-
-Consult your specific API documentation on how the return value is structured
+Notice that Ostruct converts only the first level hash keys into Ostruct object attributes.
+Consult your specific API documentation on how the return value is structured.
 
 === Proxy
-Esnek is based on restclient and some of the settings from Restclient apply to esnek to.
-Esnek will use the proxy specified by RestClient.proxy:
+Esnek is based on Restclient, so some of the settings of Restclient apply to Esnek too.
+For example Esnek will use the proxy specified by RestClient.proxy:
 
-  RestClient.proxy = "http://proxy.example.com/"
-or the proxy url is set in an environment variable   
-  RestClient.proxy = ENV['http_proxy']
+  RestClient.proxy = "http://proxy.example.com/" # or =ENV['http_proxy']
 
 === Logging
 
-To enable logging the calls made to the API, you may
-
-* set RestClient.log with a ruby Logger
-* or set an environment variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
+To enable logging the calls made to the API, you may set RestClient.log with a ruby Logger or set an environment 
+variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
 
    $ RESTCLIENT_LOG=stdout path/to/my/program
    $ RESTCLIENT_LOG=stdout irb
