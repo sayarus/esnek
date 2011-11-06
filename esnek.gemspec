@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.files = %w(LICENSE README.rdoc Rakefile AUTHORS CHANGES) + Dir.glob("{bin,lib,spec, rdoc}/**/*")
   s.require_path = "lib"
   s.bindir = "bin"
-  s.add_dependency("json", "~> 1.5.1")
-  s.add_dependency("rest-client", "~> 1.6.1")
+  s.add_dependency("json", ">= 1.5.1")
+  s.add_dependency("rest-client", ">= 1.6.1")
 end
