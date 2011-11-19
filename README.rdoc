@@ -115,4 +115,4 @@ variable to avoid modifying the code (in this case you can use a file name, "std
 
 == Notes
 
-Esnek was initially developed using Redcar under Ubuntu Linux 10.10.
+Esnek was initially developed using Redcar under Ubuntu GNU Linux
