@@ -32,7 +32,7 @@ class Esnek
       url = @url_root.gsub(/\/$/,'') + '/' + @chain.map{|e| e[:method]}.compact.join('/')
       params = @chain.inject({}){|s,e| s.merge!(e[:arg] || {}) if e[:arg].is_a?(Hash)}
       @chain = []
-      headers = {:params => params}.merge!({@header})
+      headers = {:params => params}.merge!(@header)
       data = block_given? ? block.call : nil rescue nil
       if @json_api
         headers.merge!({:content_type => :json, :accept => :json})
