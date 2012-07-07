@@ -1,6 +1,8 @@
 = Esnek Change Log
 
 == Expected
+== 0.3.x
+* Non Json data payloads are now supported
 
 == 0.2.x
 * tests with elasticsearch API

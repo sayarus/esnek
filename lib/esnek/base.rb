@@ -6,9 +6,10 @@ require 'ostruct'
 # highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 class Esnek
   attr_accessor :chain, :url_root
-  def initialize(url_root)
+  def initialize(url_root,json_api=true)
     @url_root = url_root
     @chain = []
+    @json_api = json_api
   end
 
   def parse_json(resp)
@@ -29,12 +30,21 @@ class Esnek
       @chain << {:method => nil, :arg => (args.empty? ? {} : args[0]) }
       url = @url_root.gsub(/\/$/,'') + '/' + @chain.map{|e| e[:method]}.compact.join('/')
       params = @chain.inject({}){|s,e| s.merge!(e[:arg] || {}) if e[:arg].is_a?(Hash)}
-      if block_given?
-        data = block.call.to_json rescue nil
-      end
       @chain = []      
-      resp = block_given? ? RestClient.send(method_sym, url, data,:params => params,:content_type => :json, :accept => :json) :
-            RestClient.send(method_sym, url,:params => params,:content_type => :json, :accept => :json)
+      resp = if block_given?
+               data = block.call rescue nil
+               if @json_api                 
+                 RestClient.send(method_sym, url, data.to_json, {:params => params,:content_type => :json, :accept => :json})
+               else
+                 RestClient.send(method_sym, url, data, {:params => params})
+               end
+             else
+               if @json_api                 
+                 RestClient.send(method_sym, url, {:params => params, :content_type => :json, :accept => :json})
+               else
+                 RestClient.send(method_sym, url, {:params => params})
+               end
+             end
             
       resp.headers[:content_type].include?('application/json') ? parse_json(resp) : resp
     else      
