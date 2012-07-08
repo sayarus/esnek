@@ -1,6 +1,9 @@
 = Esnek Change Log
 
 == Expected
+== 0.4.x
+** oauth support with an access token through restclient
+
 == 0.3.x
 * bug fixed for content type inclusions
 * custom headers are supported
