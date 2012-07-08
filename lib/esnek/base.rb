@@ -27,7 +27,7 @@ class Esnek
     end
   end
   def method_missing(method_sym, *args, &block)
-    if [:get, :put, :post, :delete].include?(method_sym)
+    if [:get, :put, :post, :delete, :patch, :head].include?(method_sym)
       @chain << {:method => nil, :arg => (args.empty? ? {} : args[0]) }
       url = @url_root.gsub(/\/$/,'') + '/' + @chain.map{|e| e[:method]}.compact.join('/')
       params = @chain.inject({}){|s,e| s.merge!(e[:arg] || {}) if e[:arg].is_a?(Hash)}
