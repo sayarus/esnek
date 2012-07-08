@@ -38,7 +38,7 @@ class Esnek
         headers.merge!({:content_type => :json, :accept => :json})
         data = data.to_json if data rescue nil
       end
-      resp =  if data
+      resp =  if [:put, :post,:patch].include?(method_sym)
                 RestClient.send(method_sym, url, data, headers)
               else
                 RestClient.send(method_sym, url, headers)
@@ -59,7 +59,7 @@ class Esnek
   end
   
   def respond_to?(method_sym)
-    if [:get, :put, :post, :delete].include?(method_sym)
+    if [:head,:get, :put, :post,:patch, :delete].include?(method_sym)
       true
     else
       super
