@@ -46,11 +46,10 @@ class Esnek
         data = data.to_json if data rescue nil
       end
       # if a oauth token exist, use it; unfortunately restclient does not allow a proper
-        RestClient.reset_before_execution_procs
-        RestClient.add_before_execution_proc do |req, params|
-          @access_token.sign! req
-        end if @access_token
-      end
+      RestClient.reset_before_execution_procs
+      RestClient.add_before_execution_proc do |req, params|
+        @access_token.sign! req
+      end if @access_token
       resp =  if [:put, :post,:patch].include?(method_sym)
                 RestClient.send(method_sym, url, data, headers)
               else
