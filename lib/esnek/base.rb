@@ -44,7 +44,11 @@ class Esnek
                 RestClient.send(method_sym, url, headers)
               end
       
-      resp.headers[:content_type].include?('application/json') ? parse_json(resp) : resp
+      if resp.headers[:content_type] && resp.headers[:content_type].include?('application/json')
+        parse_json(resp)
+      else
+        resp
+      end
     else      
       @chain << {:method => method_sym.to_s.gsub(/^__/,''), :arg => (args.empty? ? {} : args[0]) }
       self
@@ -53,7 +57,7 @@ class Esnek
     @chain = []
     raise $!
   end
-    
+  
   def respond_to?(method_sym)
     if [:get, :put, :post, :delete].include?(method_sym)
       true
@@ -61,5 +65,5 @@ class Esnek
       super
     end
   end
-    
+  
 end

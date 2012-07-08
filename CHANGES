@@ -2,6 +2,7 @@
 
 == Expected
 == 0.3.x
+* bug fixed for content type inclusions
 * custom headers are supported
 * Non Json data payloads are now supported
 
