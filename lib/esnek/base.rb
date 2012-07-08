@@ -9,8 +9,8 @@ class Esnek
   def initialize(url_root,options={:json_api=>true,:headers=>{}})
     @url_root = url_root
     @chain = []
-    @json_api = options[:json_api]
-    @headers= options[:headers]
+    @json_api = options[:json_api].nil? ? true : options[:json_api]
+    @headers= options[:headers] || {}
     if options[:oauth] # Esnek assumes that oauth ruby gem is installed
       options[:oauth][:scheme] ||= :header
       consumer = OAuth::Consumer.new(options[:oauth][:consumer_key],options[:oauth][:consumer_secret], {:site => options[:oauth][:site], :scheme => options[:oauth][:scheme]})
@@ -46,12 +46,10 @@ class Esnek
         data = data.to_json if data rescue nil
       end
       # if a oauth token exist, use it; unfortunately restclient does not allow a proper
-      if @access_token
-        access_token=@access_token
         RestClient.reset_before_execution_procs
         RestClient.add_before_execution_proc do |req, params|
-          access_token.sign! req
-        end
+          @access_token.sign! req
+        end if @access_token
       end
       resp =  if [:put, :post,:patch].include?(method_sym)
                 RestClient.send(method_sym, url, data, headers)
