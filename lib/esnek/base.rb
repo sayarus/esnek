@@ -44,6 +44,8 @@ class Esnek
       if @json_api
         headers.merge!({:content_type => :json, :accept => :json})
         data = data.to_json if data rescue nil
+      elsif data.is_a? Hash
+        data = data.map{|k,v| "#{CGI::escape(k)}=#{CGI::escape(v)}"}.join('&')
       end
       # if a oauth token exist, use it; unfortunately restclient does not allow a proper
       RestClient.reset_before_execution_procs

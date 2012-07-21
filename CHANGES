@@ -2,7 +2,8 @@
 
 == Expected
 == 0.4.x
-** oauth support with an access token through restclient
+* hash post data in the block are now converted into a form post data
+* oauth support with an access token through restclient
 
 == 0.3.x
 * bug fixed for content type inclusions
