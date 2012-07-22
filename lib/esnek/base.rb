@@ -6,10 +6,11 @@ require 'ostruct'
 # highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 class Esnek
   attr_accessor :chain, :url_root
-  def initialize(url_root,options={:json_api=>true,:headers=>{}})
+  def initialize(url_root,options={:json_api=>true,:json_return=>true, :headers=>{}})
     @url_root = url_root
     @chain = []
     @json_api = options[:json_api].nil? ? true : options[:json_api]
+    @json_return = options[:json_return].nil? ? @json_api : options[:json_return]
     @headers= options[:headers] || {}
     if options[:oauth] # Esnek assumes that oauth ruby gem is installed
       options[:oauth][:scheme] ||= :header
@@ -58,7 +59,7 @@ class Esnek
                 RestClient.send(method_sym, url, headers)
               end
       
-      if resp.headers[:content_type] && resp.headers[:content_type].include?('application/json')
+      if @json_return # || (resp.headers[:content_type] && resp.headers[:content_type].include?('application/json'))
         parse_json(resp)
       else
         resp
