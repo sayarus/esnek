@@ -1,9 +1,10 @@
 = Esnek
 
-_Esnek_ provides a minimalistic Ruby interface for JSON  APIs, such as ElasticSearch, Google APIs, Facebook Graph API.. 
-Esnek is initially developed for _ElasticSearch_ http://www.elasticsearch.org which is based on _Lucene_ http://lucene.apache.org .
+_Esnek_ is a minimalistic client for any Web API in general and no API
+in particular. For few years I'm using Esnek as client for APIs like
+ElasticSearch, Google APIs, Facebook Graph API, LinkedIn, Facebook,
+Twitter OAuth login integrations.
 
-If anyone is using esnek it would be appreciated if you could give any feedback. 
 
 == Installation:
 
@@ -15,18 +16,19 @@ If anyone is using esnek it would be appreciated if you could give any feedback.
   require 'esnek'  
   gapi = Esnek.new('https://www.googleapis.com')
   res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
-  puts res.longUrl # Use res.table[:id] instead of res.id, because id method already exist for Object
+  # Use res.table[:id] instead of res.id, because id method already exist for Object
+  puts res.longUrl
+  puts res.inspect 
 
 ===  Facebook Graph API
   require 'esnek'  
   fb = Esnek.new('http://graph.facebook.com')
-  res = fb.send(:"http://www.wsirussia.ru").get
-Notice that since "http://www.wsirussia.ru" is an invalid ruby method name, we use "send" to call it
+  res = fb.send(:"http://www.resimit.com").get
+  # Notice that since "http://www.resimit.com" is a complex ruby method name, we use "send" to call it
   puts res.shares
 
 === ElasticSearch
 
-To install ElasticSearch please follow the guides at http://www.elasticsearch.org.
 To use esnek just instantiate Esnek with the base API URL. 
   require 'esnek'  
   es = Esnek.new('http://localhost:9200')
