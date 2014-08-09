@@ -1,6 +1,10 @@
 = Esnek Change Log
 
 == Expected
+
+== 0.4.x
+* MIT License adopted
+
 == 0.4.x
 * hash post data in the block are now converted into a form post data
 * oauth support with an access token through restclient
