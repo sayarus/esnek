@@ -1,17 +1,16 @@
 require 'rest_client'
 require 'json'
-require 'ostruct'
 
 # _Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed, 
 # highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
 class Esnek
-  attr_accessor :chain, :url_root
-  def initialize(url_root,options={:json_api=>true,:json_return=>true, :headers=>{}})
-    @url_root = url_root
-    @chain = []
+  #attr_accessor :esnek_chain, :esnek_url_root, :esnek_params, :esnek_url
+  def initialize(esnek_url_root,options={:json_api=>true,:json_return=>true, :header=>{}})
+    @esnek_url_root = esnek_url_root
+    @esnek_chain = []
     @json_api = options[:json_api].nil? ? true : options[:json_api]
     @json_return = options[:json_return].nil? ? @json_api : options[:json_return]
-    @headers= options[:headers] || {}
+    @header= options[:header] || {}
     if options[:oauth] # Esnek assumes that oauth ruby gem is installed
       options[:oauth][:scheme] ||= :header
       consumer = OAuth::Consumer.new(options[:oauth][:consumer_key],options[:oauth][:consumer_secret], {:site => options[:oauth][:site], :scheme => options[:oauth][:scheme]})
@@ -27,49 +26,55 @@ class Esnek
       class << r;def table;@table;end;end
       r
     when j.is_a?(Array)
-      j.map{|e| r=OpenStruct.new(e);class << r;def table;@table;end;end;r}
+      j.map{|e| r= if e.is_a?(Hash)
+        OpenStruct.new(e)
+        class<<r;def table;@table;end;end;
+        else
+          e
+        end        
+        r}
     else
       j
     end
   end
   def method_missing(method_sym, *args, &block)
     if [:get, :put, :post, :delete, :patch, :head].include?(method_sym)
-      @chain << {:method => nil, :arg => (args.empty? ? {} : args[0]) }
-      url = @url_root.gsub(/\/$/,'') + '/' + @chain.map{|e| e[:method]}.compact.join('/')
-      params = @chain.inject({}){|s,e| s.merge!(e[:arg] || {}) if e[:arg].is_a?(Hash)}
-      @chain = []
-      headers = {:params => params}.merge!(@headers)
-      data = block_given? ? block.call : nil rescue nil
+      @esnek_chain << {:method => nil, :arg => (args.empty? ? {} : args[0]) }
+      @esnek_url = @esnek_url_root.gsub(/\/$/,'') + '/' + @esnek_chain.map{|e| e[:method]}.compact.join('/')
+      @esnek_params = @esnek_chain.inject({}){|s,e| s.merge!(e[:arg] || {}) if e[:arg].is_a?(Hash)}
+      @esnek_chain = []
+      heades = {:params => @esnek_params}.merge(@header)
+      data = block_given? ? block.call : nil #rescue nil
 
       # if a JSON api is set in initializer both the payload data and the result will be un/jsonized
       if @json_api
-        headers.merge!({:content_type => :json, :accept => :json})
-        data = data.to_json if data rescue nil
+        heades.merge!({:content_type => :json, :accept => :json})
+        data = data.to_json if data #rescue nil
       elsif data.is_a? Hash
         data = data.map{|k,v| "#{CGI::escape(k)}=#{CGI::escape(v)}"}.join('&')
       end
       # if a oauth token exist, use it; unfortunately restclient does not allow a proper
       RestClient.reset_before_execution_procs
-      RestClient.add_before_execution_proc do |req, params|
+      RestClient.add_before_execution_proc do |req, par|
         @access_token.sign! req
       end if @access_token
-      resp =  if [:put, :post,:patch].include?(method_sym)
-                RestClient.send(method_sym, url, data, headers)
+      resp =  if [:put, :post,:patch].include?(method_sym)                
+                RestClient.send(method_sym, @esnek_url, data, heades)
               else
-                RestClient.send(method_sym, url, headers)
+                RestClient.send(method_sym, @esnek_url, heades)
               end
       
-      if @json_return # || (resp.headers[:content_type] && resp.headers[:content_type].include?('application/json'))
+      if @json_return
         parse_json(resp)
       else
         resp
       end
     else      
-      @chain << {:method => method_sym.to_s.gsub(/^__/,''), :arg => (args.empty? ? {} : args[0]) }
+      @esnek_chain << {:method => method_sym.to_s.gsub(/^__/,''), :arg => (args.empty? ? {} : args[0]) }
       self
     end
   rescue
-    @chain = []
+    @esnek_chain = []
     raise $!
   end
   

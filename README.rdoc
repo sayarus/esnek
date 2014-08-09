@@ -11,6 +11,19 @@ If anyone is using esnek it would be appreciated if you could give any feedback.
 
 == Quick Start
 
+===  Google URL Shortener
+  require 'esnek'  
+  gapi = Esnek.new('https://www.googleapis.com')
+  res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
+  puts res.longUrl # Use res.table[:id] instead of res.id, because id method already exist for Object
+
+===  Facebook Graph API
+  require 'esnek'  
+  fb = Esnek.new('http://graph.facebook.com')
+  res = fb.send(:"http://www.wsirussia.ru").get
+Notice that since "http://www.wsirussia.ru" is an invalid ruby method name, we use "send" to call it
+  puts res.shares
+
 === ElasticSearch
 
 To install ElasticSearch please follow the guides at http://www.elasticsearch.org.
@@ -39,23 +52,6 @@ In order to post a JSON data simply pass a block (do...end) which returns a hash
     {"user" => "alper", "post_date" => "2011-11-15T14:12:12", "message" => "For esnek"}
   end
 
-===  Google Translate API
-  require 'esnek'  
-  gapi = Esnek.new('https://www.googleapis.com')
-  gapi.language.translate.v2.get :q => "hello world", :source => :en, :target => :tr, :key => INSERT_YOUR_KEY
-
-===  Google URL Shortener
-  require 'esnek'  
-  gapi = Esnek.new('https://www.googleapis.com')
-  res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
-  puts res.longUrl # Use res.table[:id] instead of res.id, because id method already exist for Object
-
-===  Facebook Graph API
-  require 'esnek'  
-  fb = Esnek.new('http://graph.facebook.com')
-  res = fb.send(:"http://www.wsirussia.ru").get
-Notice that since "http://www.wsirussia.ru" is an invalid ruby method name, we use "send" to call it
-  puts res.shares
 
 == Advanced
 With Esnek you make a chained method call where each method is a directory in the URL 
@@ -90,7 +86,8 @@ If you append a block and the block returns a hash, the hash is converted into a
   end
 
 === Return Values
-Esnek converts the returned JSON into an Ostruct object.
+Esnek converts the returned JSON into an Ostruct object. You may use
+the returned object's inspect method to see how it works for a given API.
   
   res.my_field # access as if it is an object's attrribute
   res.table[:my_field]  # For field names such as "id", you may use the "table" attribute.
@@ -115,4 +112,5 @@ variable to avoid modifying the code (in this case you can use a file name, "std
 
 == Notes
 
-Esnek was initially developed using Redcar under Ubuntu GNU Linux
+Esnek was initially developed using Emacs under Ubuntu Linux. 
+
