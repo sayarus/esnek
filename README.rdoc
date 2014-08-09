@@ -1,7 +1,7 @@
 = Esnek
 
 _Esnek_ is a minimalistic client for any Web API in general and no API
-in particular. For few years I'm using Esnek as client for APIs like
+in particular. Esnek has been used in production for a few years already.
 ElasticSearch, Google APIs, Facebook Graph API, LinkedIn, Facebook,
 Twitter OAuth login integrations.
 
@@ -15,10 +15,10 @@ Twitter OAuth login integrations.
 ===  Google URL Shortener
   require 'esnek'  
   gapi = Esnek.new('https://www.googleapis.com')
-  res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.sayarus.com/"}}
+  res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.resimit.com/"}}
   # Use res.table[:id] instead of res.id, because id method already exist for Object
   puts res.longUrl
-  puts res.inspect 
+  puts res.inspect
 
 ===  Facebook Graph API
   require 'esnek'  
