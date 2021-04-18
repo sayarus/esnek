@@ -12,20 +12,15 @@ Twitter OAuth login integrations.
 
 == Quick Start
 
-===  Google URL Shortener
+===  
   require 'esnek'  
-  gapi = Esnek.new('https://www.googleapis.com')
-  res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.resimit.com/"}}
-  # Use res.table[:id] instead of res.id, because id method already exist for Object
-  puts res.longUrl
-  puts res.inspect
+  esnek = Esnek.new('https://jsonplaceholder.typicode.com/')
+  todo = esnek.todos.__1.get
+  puts todo.id
+  puts todo.inspect
 
 ===  Facebook Graph API
   require 'esnek'  
-  fb = Esnek.new('http://graph.facebook.com')
-  res = fb.send(:"http://www.resimit.com").get
-  # Notice that since "http://www.resimit.com" is a complex ruby method name, we use "send" to call it
-  puts res.shares
 
 === ElasticSearch
 

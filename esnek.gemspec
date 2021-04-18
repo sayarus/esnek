@@ -6,7 +6,6 @@ require 'esnek/version'
 Gem::Specification.new do |s|
   s.name = 'esnek'
   s.version = ESNEK_VERSION
-  #s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc', 'LICENSE','CHANGES','AUTHORS']
   s.summary = 'Esnek provides a minimalistic Ruby interface for JSON  APIs, such as ElasticSearch'
   s.description = s.summary
@@ -24,9 +23,3 @@ Gem::Specification.new do |s|
   s.add_development_dependency "bundler", "~> 1.6"
   s.add_development_dependency "rake", "~> 10.0"
 end
-
-
-
-
-
-

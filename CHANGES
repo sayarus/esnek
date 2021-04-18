@@ -2,6 +2,9 @@
 
 == Expected
 
+== 0.5.1
+* Verify SSL 1 support
+
 == 0.4.x
 * MIT License adopted
 

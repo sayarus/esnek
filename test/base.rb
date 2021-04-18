@@ -4,24 +4,32 @@ require './lib/esnek'
 require 'minitest/autorun'
 
 describe Esnek do
-  before do      
+  before do
   end
 
-  describe "When I query Google URL Shortener API" do
-   it "should return a shortened URL" do
-     gapi = Esnek.new('https://www.googleapis.com')
-     res = gapi.urlshortener.v1.url.post {{:longUrl => "http://www.resimit.com/"}}
-     puts res.inspect
-   end
-  end 
+  describe "When I query json placeholder API" do
+    it "should return an object" do
+      esnek = Esnek.new('https://jsonplaceholder.typicode.com/')
+      res = esnek.todos.__1.get
+      assert_equal 1, res.id
+    end
 
-  describe "When I query Facebook graph API to count the # of shares of url" do
-    it "should return an object which responds to :shares" do
-      fb = Esnek.new('http://graph.facebook.com')
-      res = fb.send(:"http://www.resimit.com").get
-      assert res.respond_to?(:shares)
-      puts res.inspect
+    it "should put" do
+      esnek = Esnek.new('https://jsonplaceholder.typicode.com/')
+      res = esnek.todos.__1.put { { title: 'A' }} 
+      assert_equal 1, res.id
+    end
+
+    it "should post" do
+      esnek = Esnek.new('https://jsonplaceholder.typicode.com/')
+      res = esnek.todos.post { { title: 'A' }} 
+      assert res.id > 0
+    end
+
+    it "should delete" do
+      esnek = Esnek.new('https://jsonplaceholder.typicode.com/')
+      res = esnek.todos.__1.delete
+      assert res.id.nil?
     end
   end
-
 end

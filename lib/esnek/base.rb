@@ -1,20 +1,23 @@
 require 'rest_client'
 require 'json'
 
-# _Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed, 
-# highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org). 
+# _Esnek_ provides a quick Ruby interface for JSON  APIs, such as _ElasticSearch_ (http://www.elasticsearch.org); a scalable, fast, distributed,
+# highly-available, real time search RESTful search engine communicating by JSON over HTTP, based on _Lucene_ (http://lucene.apache.org).
 class Esnek
   #attr_accessor :esnek_chain, :esnek_url_root, :esnek_params, :esnek_url
-  def initialize(esnek_url_root,options={:json_api=>true,:json_return=>true, :header=>{}})
+  def initialize(esnek_url_root, options={:verify_ssl=>true, :json_api=>true,:json_return=>true, :header=>{}})
     @esnek_url_root = esnek_url_root
     @esnek_chain = []
     @json_api = options[:json_api].nil? ? true : options[:json_api]
     @json_return = options[:json_return].nil? ? @json_api : options[:json_return]
+    @verify_ssl = options[:verify_ssl]
     @header= options[:header] || {}
     if options[:oauth] # Esnek assumes that oauth ruby gem is installed
       options[:oauth][:scheme] ||= :header
       consumer = OAuth::Consumer.new(options[:oauth][:consumer_key],options[:oauth][:consumer_secret], {:site => options[:oauth][:site], :scheme => options[:oauth][:scheme]})
       @access_token = OAuth::AccessToken.from_hash(consumer, {:oauth_token => options[:oauth][:oauth_token], :oauth_token_secret => options[:oauth][:oauth_token_secret]} )
+    else
+      @access_token = nil
     end
   end
 
@@ -31,7 +34,7 @@ class Esnek
         class<<r;def table;@table;end;end;
         else
           e
-        end        
+        end
         r}
     else
       j
@@ -58,18 +61,18 @@ class Esnek
       RestClient.add_before_execution_proc do |req, par|
         @access_token.sign! req
       end if @access_token
-      resp =  if [:put, :post,:patch].include?(method_sym)                
-                RestClient.send(method_sym, @esnek_url, data, heades)
+      resp =  if [:put, :post,:patch].include?(method_sym)
+                RestClient::Request.execute(:method=>method_sym, :url=>@esnek_url, :payload=>data, :headers=>heades, :verify_ssl=>@verify_ssl)
               else
-                RestClient.send(method_sym, @esnek_url, heades)
+                RestClient::Request.execute(:method=>method_sym, :url=>@esnek_url, :headers=>heades, :verify_ssl=>@verify_ssl)
               end
-      
+
       if @json_return
         parse_json(resp)
       else
         resp
       end
-    else      
+    else
       @esnek_chain << {:method => method_sym.to_s.gsub(/^__/,''), :arg => (args.empty? ? {} : args[0]) }
       self
     end
@@ -77,7 +80,7 @@ class Esnek
     @esnek_chain = []
     raise $!
   end
-  
+
   def respond_to?(method_sym)
     if [:head,:get, :put, :post,:patch, :delete].include?(method_sym)
       true
@@ -85,5 +88,5 @@ class Esnek
       super
     end
   end
-  
+
 end
