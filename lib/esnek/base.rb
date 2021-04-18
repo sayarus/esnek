@@ -25,17 +25,19 @@ class Esnek
     j = JSON.parse resp
     case
     when j.is_a?(Hash)
-      r=OpenStruct.new(j)
-      class << r;def table;@table;end;end
+      r = OpenStruct.new(j)
+      class<<r;def table;@table;end;end;
       r
     when j.is_a?(Array)
-      j.map{|e| r= if e.is_a?(Hash)
-        OpenStruct.new(e)
-        class<<r;def table;@table;end;end;
-        else
-          e
-        end
-        r}
+      j.map do |e|
+        r= if e.is_a?(Hash)
+             r = OpenStruct.new(e)
+             class<<r;def table;@table;end;end;
+           else
+             e
+           end
+        r
+      end
     else
       j
     end
