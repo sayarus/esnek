@@ -30,9 +30,10 @@ class Esnek
       r
     when j.is_a?(Array)
       j.map do |e|
-        r= if e.is_a?(Hash)
-             r = OpenStruct.new(e)
-             class<<r;def table;@table;end;end;
+        r = if e.is_a?(Hash)
+            rr = OpenStruct.new(e)
+            class<<rr;def table;@table;end;end;
+            rr
            else
              e
            end
